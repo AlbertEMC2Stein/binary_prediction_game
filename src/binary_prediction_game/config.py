@@ -15,8 +15,8 @@ def _runtime_root() -> Path:
         executable = Path(sys.executable).resolve()
 
         # macOS .app:
-        # dist/TdM.app/Contents/MacOS/TdM
-        # We want dist/data next to TdM.app.
+        # dist/BPG.app/Contents/MacOS/BPG
+        # We want dist/data next to BPG.app.
         if (
             sys.platform == "darwin"
             and executable.parent.name == "MacOS"
@@ -25,8 +25,8 @@ def _runtime_root() -> Path:
             return executable.parents[2].parent
 
         # Windows/Linux:
-        # dist/TdM/TdM.exe or dist/TdM/TdM
-        # We want dist/TdM/data.
+        # dist/BPG/BPG.exe or dist/BPG/BPG
+        # We want dist/BPG/data.
         return executable.parent
 
     # Development mode:

@@ -1,4 +1,4 @@
-# TdM Binary Prediction Game
+# RPTU: Tag der Mathematik 2026 - Binary Prediction Game
 
 Interactive Pygame demonstration for teaching randomness, stochastic prediction, and binary sequence modelling.
 
@@ -23,12 +23,12 @@ Users enter a sequence of `0` and `1` inputs. Several models try to predict the 
 Expected layout:
 
 ```text
-TdM/
+Binary-Prediction-Game/
     README.md
     pyproject.toml
     run_game.sh
     scripts/
-        tdm_entry.py
+        bpg_entry.py
     data/
         bad_words.txt
         built-in-sequences/
@@ -215,32 +215,32 @@ python -m PyInstaller \
   --noconfirm \
   --clean \
   --onedir \
-  --name TdM \
+  --name Binary-Prediction-Game \
   --paths src \
   --collect-all sklearn \
   --collect-all scipy \
-  scripts/tdm_entry.py
+  scripts/bpg_entry.py
 ```
 
 Copy the writable data folder next to the executable:
 
 ```bash
-cp -R data dist/TdM/data
+cp -R data dist/Binary-Prediction-Game/data
 ```
 
 Test the packaged app:
 
 ```bash
-./dist/TdM/TdM
+./dist/Binary-Prediction-Game/Binary-Prediction-Game
 ```
 
 Create an archive for distribution:
 
 ```bash
-tar -czf TdM-linux-x86_64.tar.gz -C dist TdM
+tar -czf Binary-Prediction-Game-linux-x86_64.tar.gz -C dist Binary-Prediction-Game
 ```
 
-Distribute the whole `TdM/` folder or the `.tar.gz` archive, not just the executable file. The application needs the adjacent `data/` folder for built-in sequences, saved user sequences, and the bad-word list.
+Distribute the whole `Binary-Prediction-Game/` folder or the `.tar.gz` archive, not just the executable file. The application needs the adjacent `data/` folder for built-in sequences, saved user sequences, and the bad-word list.
 
 ## Building Windows and macOS versions
 
@@ -259,12 +259,12 @@ python -m PyInstaller `
   --clean `
   --onedir `
   --windowed `
-  --name TdM `
+  --name Binary-Prediction-Game `
   --paths src `
   --collect-all sklearn `
   --collect-all scipy `
-  scripts\tdm_entry.py
-xcopy /E /I /Y data dist\TdM\data
+  scripts\bpg_entry.py
+xcopy /E /I /Y data dist\Binary-Prediction-Game\data
 ```
 
 For macOS, ask a colleague with macOS to run roughly:
@@ -280,12 +280,12 @@ python -m PyInstaller \
   --clean \
   --onedir \
   --windowed \
-  --name TdM \
-  --osx-bundle-identifier de.rptu.tdm.binarypredictiongame \
+  --name Binary-Prediction-Game \
+  --osx-bundle-identifier de.rptu.Binary-Prediction-Game.binarypredictiongame \
   --paths src \
   --collect-all sklearn \
   --collect-all scipy \
-  scripts/tdm_entry.py
+  scripts/bpg_entry.py
 cp -R data dist/data
 ```
 
@@ -342,10 +342,10 @@ Try the launcher script with `LD_PRELOAD`:
 Make sure the folder structure is:
 
 ```text
-dist/TdM/TdM
-dist/TdM/data/built-in-sequences/
-dist/TdM/data/user-sequences/
-dist/TdM/data/bad_words.txt
+dist/Binary-Prediction-Game/Binary-Prediction-Game
+dist/Binary-Prediction-Game/data/built-in-sequences/
+dist/Binary-Prediction-Game/data/user-sequences/
+dist/Binary-Prediction-Game/data/bad_words.txt
 ```
 
 ### Packaged app starts but saving fails
