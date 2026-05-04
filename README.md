@@ -182,7 +182,7 @@ Saved user sequences are stored as YAML because they include additional metadata
 ## Controls
 
 - Press `0` or `1` to add manual input bits.
-- `horizon h` controls how far back the models are allowed to see.
+- `horizon h` controls how far into the future the models need to predict.
 - `context L` controls the context length of L-dependent models.
 - `h` and `L` can only be changed before the first input after reset.
 - **Reset** clears the current sequence and rebuilds all models.
