@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "binary-prediction-game"
+version = "0.1.0"
+description = "Interactive Pygame game for demonstrating binary randomness prediction."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pygame>=2.5.0",
+    "numpy>=1.26.0",
+    "scikit-learn>=1.4.0",
+    "PyYAML>=6.0.0",
+]
+
+[project.optional-dependencies]
+build = ["pyinstaller>=6.0"]
+dev = ["ruff>=0.4.0", "mypy>=1.8.0"]
+
+[project.scripts]
+binary-prediction-game = "binary_prediction_game.app:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/binary_prediction_game"]
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
