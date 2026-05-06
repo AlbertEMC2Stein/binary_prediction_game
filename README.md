@@ -219,6 +219,7 @@ python -m PyInstaller \
   --paths src \
   --collect-all sklearn \
   --collect-all scipy \
+  --collect-data binary_prediction_game \
   scripts/bpg_entry.py
 ```
 
@@ -286,6 +287,7 @@ python -m PyInstaller \
   --paths src \
   --collect-all sklearn \
   --collect-all scipy \
+  --collect-data binary_prediction_game \
   scripts/bpg_entry.py
 cp -R data dist/data
 ```
