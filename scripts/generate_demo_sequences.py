@@ -52,7 +52,7 @@ WEATHER_CLOUDY_THRESHOLD_PERCENT = 75.0
 AAPL_STOOQ_SYMBOL = "aapl.us"
 STOOQ_API_KEY = "AsFbTQMOB3EVj8JgnGltq4SrUHmoDZf7"
 
-OUTPUT_DIR = Path("data/built-in-sequences")
+OUTPUT_DIR = Path("../data/built-in-sequences")
 
 
 @dataclass(frozen=True)
