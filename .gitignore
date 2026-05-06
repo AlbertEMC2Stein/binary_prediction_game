@@ -8,6 +8,7 @@ dist/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+*.tar.gz
 data/user-sequences/*.yaml
 data/user-sequences/*.yml
 data/user-sequences/*.txt
