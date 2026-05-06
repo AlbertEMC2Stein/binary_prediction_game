@@ -203,7 +203,9 @@ class BinaryPredictionGui:
         benchmark_controls_enabled = not self.state.simulation_running
         self.horizon_input.set_enabled(controls_enabled)
         self.l_past_input.set_enabled(controls_enabled)
-        self.rng_button.enabled = benchmark_controls_enabled
+        self.rng_button.enabled = (
+            benchmark_controls_enabled and not self.sequence_dropdown.is_open
+        )
         self.rerun_button.enabled = (
             benchmark_controls_enabled and len(self.state.bits) > 0
         )
