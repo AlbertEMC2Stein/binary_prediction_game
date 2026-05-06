@@ -52,6 +52,8 @@ WEATHER_CLOUDY_THRESHOLD_PERCENT = 75.0
 AAPL_STOOQ_SYMBOL = "aapl.us"
 STOOQ_API_KEY = "AsFbTQMOB3EVj8JgnGltq4SrUHmoDZf7"
 
+OUTPUT_DIR = Path("data/built-in-sequences")
+
 
 @dataclass(frozen=True)
 class SequenceRecord:
@@ -67,13 +69,14 @@ class SequenceRecord:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+
     parser = argparse.ArgumentParser(
         description="Generate YAML files containing pre-defined 0-1 sequences."
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("built-in-sequences"),
+        default=OUTPUT_DIR,
         help="Directory in which the .yml files are written.",
     )
     parser.add_argument(
@@ -82,6 +85,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="Generate only the first three deterministic files and skip data downloads.",
     )
     args = parser.parse_args(argv)
+
+    if not args.output_dir.is_dir():
+        print(
+            f"Error: output directory {args.output_dir} does not exist", file=sys.stderr
+        )
+        return 1
 
     records = [
         alternating_bits_record(length=1000),
