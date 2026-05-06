@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable
+from importlib import resources
 
 from binary_prediction_game import config
 from binary_prediction_game.models.base import Bit
@@ -235,13 +236,12 @@ def validate_username(username: str) -> str:
             f"Usernames cannot be longer than {config.USERNAME_MAX_LENGTH} characters."
         )
 
-    lower_name = normalized.lower()
-    for bad_word in _load_bad_words(config.USERNAME_BAD_WORDS_FILE):
-        if bad_word and bad_word in lower_name:
-            censored_word = bad_word[0] + "*" * (len(bad_word) - 2) + bad_word[-1]
-            raise UsernameValidationError(
-                f"This username is not permitted ({censored_word})."
-            )
+    bad_words = _load_bad_words()
+    lowered_username = username.lower()
+
+    for bad_word in bad_words:
+        if bad_word in lowered_username:
+            raise UsernameValidationError("Username contains a forbidden word.")
 
     return normalized
 
@@ -371,16 +371,22 @@ def _optional_string(value: object, *, default: str) -> str:
     return value.strip() or default
 
 
-def _load_bad_words(path: Path) -> tuple[str, ...]:
-    if not path.exists():
-        return ()
+def _load_bad_words() -> set[str]:
+    """Load forbidden username fragments from bundled package resources."""
 
-    words: list[str] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        stripped = line.strip().lower()
-        if stripped and not stripped.startswith("#"):
-            words.append(stripped)
-    return tuple(words)
+    try:
+        resource = resources.files("binary_prediction_game.resources").joinpath(
+            "bad_words.txt"
+        )
+        content = resource.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return set()
+
+    return {
+        line.strip().lower()
+        for line in content.splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    }
 
 
 def _score_for_filename(randomness_score: float | None) -> int:
