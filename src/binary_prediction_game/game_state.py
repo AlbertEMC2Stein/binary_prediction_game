@@ -209,6 +209,40 @@ class GameState:
             description=f"Python pseudo-random sequence ({steps} bits)",
         )
 
+    def rerun_current_sequence(self) -> None:
+        """Reset and replay the currently available bit sequence.
+
+        This works for manually entered sequences as well as loaded/RNG benchmark
+        sequences. The rerun itself is treated as benchmark input, so it is not
+        save-eligible afterward.
+        """
+
+        if self.simulation_running:
+            return
+
+        if not self.bits:
+            self.status_message = "No sequence available to re-run."
+            return
+
+        bits = list(self.bits)
+        horizon = self.horizon
+        l_past = self.l_past
+
+        if self.loaded_sequence_description is not None:
+            description = f"re-run of {self.loaded_sequence_description}"
+        elif self.input_origin == "manual":
+            description = "re-run of manually entered sequence"
+        else:
+            description = f"re-run of {self.input_origin} sequence"
+
+        self.start_benchmark_sequence(
+            bits,
+            origin="rerun",
+            description=description,
+            horizon=horizon,
+            l_past=l_past,
+        )
+
     def advance_simulation(
         self, max_steps: int = config.SIMULATION_STEPS_PER_FRAME
     ) -> None:

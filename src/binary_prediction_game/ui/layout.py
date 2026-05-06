@@ -19,9 +19,11 @@ class AppLayout:
     legend_panel: pygame.Rect
     plot_panel: pygame.Rect
     reset_button: pygame.Rect
+    rerun_button: pygame.Rect
     leaderboard_button: pygame.Rect
     save_button: pygame.Rect
     rng_button: pygame.Rect
+    open_folder_button: pygame.Rect
     sequence_dropdown: pygame.Rect
     horizon_input: pygame.Rect
     l_past_input: pygame.Rect
@@ -73,6 +75,12 @@ def compute_layout(window_size: tuple[int, int]) -> AppLayout:
     reset_button = pygame.Rect(
         input_panel.left + 18, control_y, button_width, button_height
     )
+    rerun_button = pygame.Rect(
+        reset_button.right + 12,
+        control_y,
+        button_width,
+        button_height,
+    )
 
     number_width = 92
     number_height = 42
@@ -98,12 +106,22 @@ def compute_layout(window_size: tuple[int, int]) -> AppLayout:
         36,
     )
 
+    open_folder_button_size = 75
+    sequence_button_gap = 8
+    open_folder_button = pygame.Rect(
+        sequence_panel.right - 14 - open_folder_button_size,
+        sequence_panel.top + 58,
+        open_folder_button_size,
+        36,
+    )
+
     sequence_dropdown = pygame.Rect(
         sequence_panel.left + 14,
         sequence_panel.top + 58,
-        sequence_panel.width - 28,
+        sequence_panel.width - sequence_button_gap - open_folder_button_size - 28,
         36,
     )
+
     rng_button = pygame.Rect(
         sequence_panel.left + 14,
         sequence_dropdown.bottom + 10,
@@ -120,9 +138,11 @@ def compute_layout(window_size: tuple[int, int]) -> AppLayout:
         legend_panel=legend_panel,
         plot_panel=plot_panel,
         reset_button=reset_button,
+        rerun_button=rerun_button,
         leaderboard_button=leaderboard_button,
         save_button=save_button,
         rng_button=rng_button,
+        open_folder_button=open_folder_button,
         sequence_dropdown=sequence_dropdown,
         horizon_input=horizon_input,
         l_past_input=l_past_input,

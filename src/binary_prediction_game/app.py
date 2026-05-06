@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import sys
+import os
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -52,6 +54,12 @@ class BinaryPredictionGui:
         self._ensure_sequence_directories()
 
         self.reset_button = Button(self.layout.reset_button, "Reset", self.state.reset)
+        self.rerun_button = Button(
+            self.layout.rerun_button,
+            "Re-run",
+            self.state.rerun_current_sequence,
+            enabled=False,
+        )
         self.leaderboard_button = Button(
             self.layout.leaderboard_button,
             "Leaderboard",
@@ -67,6 +75,11 @@ class BinaryPredictionGui:
             self.layout.rng_button,
             "RNG sequence",
             self.state.rng_simulation,
+        )
+        self.open_folder_button = Button(
+            self.layout.open_folder_button,
+            "browse",
+            self._open_sequence_folder,
         )
         self.sequence_dropdown = Dropdown(
             self.layout.sequence_dropdown,
@@ -132,9 +145,11 @@ class BinaryPredictionGui:
             return
 
         self.reset_button.handle_event(event)
+        self.rerun_button.handle_event(event)
         self.leaderboard_button.handle_event(event)
         self.save_button.handle_event(event)
         self.rng_button.handle_event(event)
+        self.open_folder_button.handle_event(event)
         self.sequence_dropdown.handle_event(event)
         self.horizon_input.handle_event(event)
         self.l_past_input.handle_event(event)
@@ -153,9 +168,11 @@ class BinaryPredictionGui:
         self.layout = compute_layout((width, height))
 
         self.reset_button.rect = self.layout.reset_button
+        self.rerun_button.rect = self.layout.rerun_button
         self.leaderboard_button.rect = self.layout.leaderboard_button
         self.save_button.rect = self.layout.save_button
         self.rng_button.rect = self.layout.rng_button
+        self.open_folder_button.rect = self.layout.open_folder_button
         self.sequence_dropdown.set_rect(self.layout.sequence_dropdown)
         self.horizon_input.set_rect(self.layout.horizon_input)
         self.l_past_input.set_rect(self.layout.l_past_input)
@@ -187,6 +204,10 @@ class BinaryPredictionGui:
         self.horizon_input.set_enabled(controls_enabled)
         self.l_past_input.set_enabled(controls_enabled)
         self.rng_button.enabled = benchmark_controls_enabled
+        self.rerun_button.enabled = (
+            benchmark_controls_enabled and len(self.state.bits) > 0
+        )
+        self.open_folder_button.enabled = self.active_popup is None
         self.sequence_dropdown.set_enabled(benchmark_controls_enabled)
         self.leaderboard_button.enabled = self.active_popup is None
         self._update_save_button()
@@ -486,11 +507,32 @@ class BinaryPredictionGui:
 
         self.sequence_dropdown.draw(self.screen, self.fonts, theme)
         self.rng_button.draw(self.screen, self.fonts, theme)
+        self.open_folder_button.draw(self.screen, self.fonts, theme)
+
+    def _open_sequence_folder(self) -> None:
+        """Open the runtime data folder in the operating system's file browser."""
+
+        config.DATA_ROOT.mkdir(parents=True, exist_ok=True)
+        config.BUILTIN_SEQUENCE_DIR.mkdir(parents=True, exist_ok=True)
+        config.USER_SEQUENCE_DIR.mkdir(parents=True, exist_ok=True)
+
+        try:
+            if sys.platform.startswith("win"):
+                os.startfile(str(config.DATA_ROOT))  # type: ignore[attr-defined]
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", str(config.DATA_ROOT)])
+            else:
+                subprocess.Popen(["xdg-open", str(config.DATA_ROOT)])
+        except OSError as error:
+            self.state.status_message = f"Could not open data folder: {error}"
+        else:
+            self.state.status_message = f"Opened folder: {config.DATA_ROOT}"
 
     def _draw_input_panel(self, rect: pygame.Rect, theme: Theme) -> None:
         draw_panel(self.screen, rect, theme, title="", fonts=self.fonts)
 
         self.reset_button.draw(self.screen, self.fonts, theme)
+        self.rerun_button.draw(self.screen, self.fonts, theme)
         self.horizon_input.draw(self.screen, self.fonts, theme)
         self.l_past_input.draw(self.screen, self.fonts, theme)
 
@@ -994,8 +1036,11 @@ class BinaryPredictionGui:
 
     def _sequence_label(self, path: Path) -> str:
         try:
-            relative = path.resolve().relative_to(config.DATA_ROOT.resolve())
-            return str(relative)
+            # relative = path.resolve().relative_to(config.DATA_ROOT.resolve())
+            # return str(relative)
+            # only keep filename to avoid cluttering
+            filename = path.stem
+            return filename
         except ValueError:
             return path.name
 
